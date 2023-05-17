@@ -4,6 +4,7 @@
   "description": "",
   "main": "setup.js",
   "scripts": {
+    "start": "node setup.js",
     "debug": "node setup.js"
   },
   "repository": {
