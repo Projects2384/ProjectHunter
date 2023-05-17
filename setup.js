@@ -6,12 +6,14 @@ const utilMessage = require('./core/helpers/message')
 const utilCsv     = require("./core/utils/csv");
 
 async function main() {
+    console.log('debug main')
     await C.init()
     await G.init()
 
     await utilClient.checkAll(G.clients)
     await utilCsv   .write(C.paths.clients, C.clients)
     //
+    console.log('check clients')
     for (const client of G.clients) {
         // await client.connect()
         await client.getMe()
@@ -24,13 +26,11 @@ async function main() {
         chats: channels
     })
 
-    // G.slaves.push(G.master)
-
+    console.log('add event listener')
     utilClient.on(eventMaster, G.master,
         async (event) => {
             const result = utilMessage.checkMessage(event.message.message, lessons)
 
-            console.log(result)
             if (result) {
                 if (await utilMessage.sendMessage(result.lesson.name, result.target)) {
                 } else {
