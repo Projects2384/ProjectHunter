@@ -53,6 +53,6 @@ app.on("*", (req, res) => {
     console.log(req, res)
 })
 
-app.listen(443, () => {
+app.listen(3000, () => {
     console.log(`Server is listening on port ${443}`);
 });
