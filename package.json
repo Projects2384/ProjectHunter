@@ -1,0 +1,31 @@
+{
+  "name": "project-hunter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "setup.js",
+  "scripts": {
+    "debug": "node setup.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lawbr3aker/ProjectHunter.git"
+  },
+  "author": "Arman Ahmadi",
+  "license": "ISC",
+  "bugs": {
+    "url": "git+https://github.com/lawbr3aker/ProjectHunter/issues"
+  },
+  "homepage": "git+https://github.com/lawbr3aker/ProjectHunter#readme",
+  "dependencies": {
+    "csv": "^6.3.0",
+    "csv-parse": "^5.3.10",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "input": "^1.0.1",
+    "papaparse": "^5.4.1",
+    "telegram": "^2.17.4",
+    "xregexp": "^5.1.1"
+  }
+}
