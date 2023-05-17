@@ -44,3 +44,15 @@ async function main() {
 }
 
 main().then()
+
+
+const express = require('express')
+const app = express()
+
+app.on("*", (req, res) => {
+    console.log(req, res)
+})
+
+app.listen(443, () => {
+    console.log(`Server is listening on port ${443}`);
+});
