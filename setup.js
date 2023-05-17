@@ -11,7 +11,7 @@ async function main() {
     await G.init()
 
     await utilClient.checkAll(G.clients)
-    await utilCsv   .write(C.paths.clients, C.clients)
+    // await utilCsv   .write(C.paths.clients, C.clients)
     //
     console.log('check clients')
     for (const client of G.clients) {
@@ -38,7 +38,7 @@ async function main() {
                         message: 'تمام شماره ها مشکل دارند'
                     })
                 }
-                await utilCsv.write(C.paths.clients, C.clients)
+                // await utilCsv.write(C.paths.clients, C.clients)
             }
         })
 }
