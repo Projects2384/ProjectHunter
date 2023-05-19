@@ -51,6 +51,6 @@ app.on("*", (req, res) => {
     res.send('hello world')
 })
 
-app.listen(3000, () => {
-    console.log(`Server is listening on port ${443}`);
+app.listen(process.env.PORT || 3030, () => {
+    console.log(`Server is listening on port ${process.env.PORT || 3030}`);
 });
