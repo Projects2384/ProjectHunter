@@ -15,7 +15,7 @@ M.create = function (data) {
 }
 
 
-M.checkAll = async function (clients, objects) {
+M.checkAll = async function (clients) {
     for (const client of clients) {
         const params = {}
         params.phoneNumber = () => client.data.phone

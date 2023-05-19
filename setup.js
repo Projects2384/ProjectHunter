@@ -6,14 +6,12 @@ const utilMessage = require('./core/helpers/message')
 const utilCsv     = require("./core/utils/csv");
 
 async function main() {
-    console.log('debug main')
     await C.init()
     await G.init()
 
     await utilClient.checkAll(G.clients)
-    // await utilCsv   .write(C.paths.clients, C.clients)
+    await utilCsv   .write(C.paths.clients, C.clients)
     //
-    console.log('check clients')
     for (const client of G.clients) {
         // await client.connect()
         await client.getMe()
@@ -26,7 +24,6 @@ async function main() {
         chats: channels
     })
 
-    console.log('add event listener')
     utilClient.on(eventMaster, G.master,
         async (event) => {
             const result = utilMessage.checkMessage(event.message.message, lessons)
@@ -38,7 +35,7 @@ async function main() {
                         message: 'تمام شماره ها مشکل دارند'
                     })
                 }
-                // await utilCsv.write(C.paths.clients, C.clients)
+                await utilCsv.write(C.paths.clients, C.clients)
             }
         })
 }
@@ -51,6 +48,7 @@ const app = express()
 
 app.on("*", (req, res) => {
     console.log(req, res)
+    res.send('hello world')
 })
 
 app.listen(3000, () => {
