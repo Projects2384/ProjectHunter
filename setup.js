@@ -34,6 +34,7 @@ async function main() {
 
     Client.on(eventMaster, G.master,
         async (event) => {
+            console.log(event.message)
             const result = Message.checkMessage(event.message.message, lessons)
 
             if (result) {
