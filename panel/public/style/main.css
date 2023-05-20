@@ -1,0 +1,82 @@
+@font-face {
+    font-family: 'fa-basic';
+    src: url("/static/fonts/Estedad-Bold.ttf");
+}
+@font-face {
+    font-family: 'fa-black';
+    src: url("/static/fonts/DiodrumArabic-Bold.ttf");
+}
+
+* {
+    font-family: inherit;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'fa-basic', sans-serif;
+    direction: rtl;
+    padding: 0 10px;
+}
+
+.button {
+    padding: 3px 50px;
+    border: 2px solid black;
+    border-radius: 10px;
+    color: white;
+    background: black;
+}
+.button:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.input {
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.ltr {
+    direction: ltr;
+}
+
+.flex-c {
+    display: flex;
+    flex-direction: column;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    font-family: 'fa-black', sans-serif;
+    text-align: center;
+}
+
+.header > .title {
+    font-size: 70px;
+    margin: -0.5rem 0;
+}
+
+.content {
+    width: 100%;
+}
+
+.auth-form {
+}
+
+.file-editor > .content {
+    width: 100%;
+    height: 300px;
+    resize: vertical;
+    padding: 5px;
+    font-size: 15px;
+    font-family: 'Courier New', sans-serif;
+    white-space: pre;
+}
