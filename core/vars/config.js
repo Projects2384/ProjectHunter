@@ -11,11 +11,20 @@ M.paths = {
 
 }
 
+M.port = G.env.PORT || 3000
+
 M.channels = []
 M.clients  = []
 M.lessons  = []
 M.patterns = []
 
+M.panel = {
+    password: 'test'
+}
+
+M.mananger = {
+    username: 'ssh_full'
+}
 
 
 M.init = async function () {

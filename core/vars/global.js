@@ -1,10 +1,15 @@
-const utilClient = require("../helpers/client");
 const M = exports
 
 
+M.express   = require('express')
+M.mustache = require('mustache-express')
 M.telegram = require('telegram')
 
 M.ext = {
+    express: {
+        session   : require('client-sessions'),
+        bodyParser: require('body-parser')
+    },
     telegram: {
         events    : require('telegram/events'),
         sessions  : require('telegram/sessions'),

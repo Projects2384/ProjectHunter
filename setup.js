@@ -1,21 +1,29 @@
 const C = require('./core/vars/config')
 const G = require('./core/vars/global')
 
-const utilClient  = require('./core/helpers/client')
-const utilMessage = require('./core/helpers/message')
+const Client  = require('./core/helpers/client')
+const Message = require('./core/helpers/message')
+const Channel = require('./core/helpers/channel')
+//
 const utilCsv     = require("./core/utils/csv");
+
+const panel = require('./panel/main')
+
 
 async function main() {
     await C.init()
     await G.init()
 
-    await utilClient.checkAll(G.clients)
-    await utilCsv   .write(C.paths.clients, C.clients)
-    //
-    for (const client of G.clients) {
-        // await client.connect()
+    // panel.init().then()
+
+    await Client .checkAll(G.clients)
+    await Channel.checkAll(C.channels, G.master)
+    for (const client of G.clients)
         await client.getMe()
-    }
+
+    await utilCsv.write(C.paths.clients , C.clients)
+    await utilCsv.write(C.paths.channels, C.channels)
+
 
     const channels = C.channels.map(x => x.id)
     const lessons  = C.lessons .map(x => x.name)
@@ -24,14 +32,14 @@ async function main() {
         chats: channels
     })
 
-    utilClient.on(eventMaster, G.master,
+    Client.on(eventMaster, G.master,
         async (event) => {
-            const result = utilMessage.checkMessage(event.message.message, lessons)
+            const result = Message.checkMessage(event.message.message, lessons)
 
             if (result) {
-                if (await utilMessage.sendMessage(result.lesson.name, result.target)) {
+                if (await Message.sendMessage(result.lesson.name, result.target)) {
                 } else {
-                    await G.master.sendMessage('armonkhan', {
+                    await G.master.sendMessage(C.mananger.username, {
                         message: 'تمام شماره ها مشکل دارند'
                     })
                 }
@@ -41,16 +49,3 @@ async function main() {
 }
 
 main().then()
-
-
-const express = require('express')
-const app = express()
-
-app.on("*", (req, res) => {
-    console.log(req, res)
-    res.send('hello world')
-})
-
-app.listen(process.env.PORT || 3030, () => {
-    console.log(`Server is listening on port ${process.env.PORT || 3030}`);
-});
