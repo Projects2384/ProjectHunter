@@ -15,13 +15,13 @@ async function main() {
     await G.init()
 
     // panel.init().then()
+    // return
 
-    await Client .checkAll(G.clients)
+    await Client .checkAll(G.clients, async () => await utilCsv.write(C.paths.clients , C.clients))
     await Channel.checkAll(C.channels, G.master)
     for (const client of G.clients)
         await client.getMe()
 
-    await utilCsv.write(C.paths.clients , C.clients)
     await utilCsv.write(C.paths.channels, C.channels)
 
 

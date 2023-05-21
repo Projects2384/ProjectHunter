@@ -15,7 +15,7 @@ M.create = function (data) {
 }
 
 
-M.checkAll = async function (clients) {
+M.checkAll = async function (clients, save) {
     for (const client of clients) {
         const params = {}
         params.phoneNumber = () => client.data.phone
@@ -25,9 +25,12 @@ M.checkAll = async function (clients) {
         //
         params.onError = (err) => console.log(err)
 
+        console.log(`${client.data.phone} Login...`)
         await client.start(params)
 
         client.data.session = client.session.save()
+        if (save)
+            await save()
     }
 }
 

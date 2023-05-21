@@ -12,7 +12,7 @@ M.router.get('/edit/file', async (req, res) => {
 
     if (G.ext.fs.existsSync(file.path))
         file.content = G.ext.fs.readFileSync(file.path)
-
+    console.log(file)
     res.render('edit-file', {
         file: file
     })
