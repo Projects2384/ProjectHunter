@@ -14,3 +14,9 @@ M.checkAll = async function (channels, user) {
         }
     }
 }
+
+M.getEntity = function (client, id) {
+    return client.invoke(new G.ext.telegram.api.channels.GetFullChannel({
+        channel: id
+    }))
+}

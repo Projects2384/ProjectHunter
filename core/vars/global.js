@@ -1,9 +1,8 @@
 const M = exports
 
 
-M.express   = require('express')
-M.mustache = require('mustache-express')
 M.telegram = require('telegram')
+M.db       = require('mongoose')
 
 M.ext = {
     express: {
@@ -23,27 +22,17 @@ M.ext = {
     },
     //
     input: require('input'),
-    regex: require('xregexp')
+    regex: require('xregexp'),
+    diff : require('difflib')
 }
 
 M.env = process.env
 
-M.clients = []
-M.slaves  = []
-M.master  = null
-
 
 M.init = async function () {
-    const C = require('./config')
-    //
     const utilClient = require('../helpers/client')
 
-    for (const data of C.clients) {
-        const client = utilClient.create(data)
-        client.data = data
-
-        M.clients.push(client)
-    }
+    M.clients = await utilClient.createAll()
 
     M.master = M.clients[0]
     M.slaves = M.clients.slice(1)

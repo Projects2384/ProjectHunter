@@ -1,44 +1,53 @@
 const M = exports
 const G = require('../vars/global')
-const C = require('../vars/config')
+
+const Models = require('../models/all')
+
+const utilTime   = require('../utils/time')
+const utilString = require('../utils/string')
 
 
-M.checkMessage = function (message) {
-    const pattern = M.extractPattern(message)
-    if (!pattern)
-        return
-
-    const result = {
-        lesson: M.extractLesson(message),
-        target: M.extractTarget(message, pattern)
-    }
-
-    if (result.lesson && result.target)
-        return result
+M.errors = {
+    InvalidMessage: 1,
+    ClientsBanned : 2
 }
 
-M.sendMessage = async function (lesson, username) {
-    const timestamp = new Date().getTime()
 
-    for (const client of G.slaves) {
+M.sendMessage = async function (message, group) {
+    if (!M.checkMessage(message.message, group.patterns.message))
+        return M.errors.InvalidMessage
+
+    const clients = G.clients.filter(x => group.clients.includes(x.data.phone))
+    //
+    const target = M.extractTarget(message.message, group.patterns.target)
+    let   lesson = ''
+    if (group.lesson &&
+        !(lesson = await M.extractLesson(message.message)))
+        return M.errors.InvalidMessage
+
+    const time      = utilTime.current()
+    const timestamp = time.getTime()
+    for (const client of clients) {
         if (timestamp <= client.data.until)
             continue
 
         try {
-            await client.sendMessage(username, {
-                message: `سلام برام نوتیف کانال اگهیتونو اتفاقی دیدم منم ${lesson} داشتم ترم قبل
-حواستون باشه تو این کانال همه کلاه بردارن جواب الکی میفرستن ترم قبل اینقد پولمو خوردن اخرشم افتادم🤦‍♀😬😬`
-            })
-            await client.sendMessage(username, {
-                message: `@mth_1994x
-@Rzaei_1401
-این دوتا به سختی پیدا کردم خوب بودن
-مخصوصا اولی بازم خاستین تست بگیرن مطمعن باشین
-تبلیغ نیست نمیخاستم یکی دیگم مثل من صفر بشه
-بدون منت کمک کردم لطفا شمام به کس دیگه کمک کنید🙏`
-            })
-            return true
+            for (const text of group.messages) {
+                await client.sendMessage(target, {
+                    message: text.replaceAll('{lesson}', lesson)
+                })
+
+                await utilTime.delay(5000)
+            }
+
+            return {
+                lesson: lesson,
+                target: target,
+                client: client,
+                time  : time
+            }
         } catch (error) {
+            console.log(error.errorMessage)
             if (error.errorMessage === 'PEER_FLOOD') {
                 //
                 client.data.until = timestamp
@@ -46,31 +55,27 @@ M.sendMessage = async function (lesson, username) {
             }
         }
     }
+
+    return M.errors.ClientsBanned;
 }
 
-M.extractPattern = function (message) {
-    for (const pattern of C.patterns)
-        if (G.ext.regex.exec(message, G.ext.regex(pattern.message)))
-            return pattern
+M.checkRegex = function (pattern, text) {
+    return G.ext.regex.exec(text, G.ext.regex(pattern))
 }
 
-M.extractLesson = function (message) {
-    let result
+M.checkMessage = function (message, pattern) {
+    return M.checkRegex(pattern, message)
+}
 
-    for (const lesson of C.lessons)
-        if (M.sentenceContains(message, lesson.name))
-            if (!result
-                || lesson.name.length > result.name.length)
-                result = lesson
+M.extractLesson = async function (message) {
+    const records = await Models.Lesson.find()
+    const lessons = records.map(x => x.name)
 
-    return result
+    return utilString.containsSentencesWithTypo(message, lessons).result
 }
 
 M.extractTarget = function (message, pattern) {
-    return G.ext.regex.exec(message, G.ext.regex(pattern.target))
-            ?.groups?.id
-}
+    const result = M.checkRegex(pattern, message)
 
-M.sentenceContains = function (sentence, other) {
-    return sentence.includes(other)
+    return result && result[0]
 }

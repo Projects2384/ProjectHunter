@@ -1,22 +1,29 @@
 const M = exports
 const G = require('../vars/global')
 
+const Models = require('../models/all')
 
-M.create = function (data) {
-    return new G.telegram.TelegramClient(
-        new G.ext.telegram.sessions.StringSession(data.session),
-        //
-        parseInt(
-        data.apiId),
-        data.apiHash,
-        //
-        {}
-    )
+
+M.createAll = async function () {
+    const records = await Models.Client.find()
+
+    return records.map(record => {
+        const client = new G.telegram.TelegramClient(
+            new G.ext.telegram.sessions.StringSession(record.session),
+            //
+            record.api.id,
+            record.api.hash,
+            //
+            {}
+        )
+        client.data = record
+
+        return client
+    })
 }
 
-
-M.checkAll = async function (clients, save) {
-    for (const client of clients) {
+M.checkAll = async function () {
+    for (const client of G.clients) {
         const params = {}
         params.phoneNumber = () => client.data.phone
         params.phoneCode   = () => G.ext.input.text(`${client.data.phone} code:`)
@@ -25,20 +32,17 @@ M.checkAll = async function (clients, save) {
         //
         params.onError = (err) => console.log(err)
 
-        console.log(`${client.data.phone} Login...`)
         await client.start(params)
 
         client.data.session = client.session.save()
-        if (save)
-            await save()
+        await client.data.save()
     }
+}
+
+M.getName = function (user) {
+    return user.firstName + (user.lastName && ` ${user.lastName}` || '')
 }
 
 M.on = function (event, client, callback) {
     client.addEventHandler(callback, event)
-}
-
-M.onAll = function (event, clients, callback) {
-    for (const client of clients)
-        client.addEventHandler(callback, event)
 }
