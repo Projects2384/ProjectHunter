@@ -11,7 +11,7 @@ const utilTime = require("./core/utils/time");
 
 
 async function main() {
-    console.log(G.env)
+    console.log(C.env,C.db)
     await G.db.connect(C.db.url)
     console.log('DB Connected');
 

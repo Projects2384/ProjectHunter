@@ -26,8 +26,6 @@ M.ext = {
     diff : require('difflib')
 }
 
-M.env = process.env
-
 
 M.init = async function () {
     const utilClient = require('../helpers/client')
