@@ -8,5 +8,5 @@ M.mananger = {
 }
 
 M.db = {
-    url: M.env.DB_URL
+    url: 'mongodb+srv://lawbr3aker:GxWjB4Rc7vmhRVXo@main.cjtljzv.mongodb.net/ProjectHunter?retryWrites=true&w=majority'
 }
