@@ -28,14 +28,17 @@ async function main() {
     await Models.Client.checkAll(G.clients)
 
     const groups = await Models.Group.find()
-    for (const group of groups) {
+    for (let group of groups) {
         const channels = group.channels.map(x => x.id)
 
         const event = new G.ext.telegram.events.NewMessage({
             chats: channels
         })
+
         Client.on(event, G.master,
             async (event) => {
+                group = await Models.Group.findById(group._id)
+
                 const message = event.message
 
                 const result = await Message.sendMessage(message, group)
