@@ -9,7 +9,7 @@ M.createAll = async function () {
 
     return records.map(record => {
         const client = new G.telegram.TelegramClient(
-            new G.ext.telegram.sessions.StringSession(''),
+            new G.ext.telegram.sessions.StringSession(record.session),
             //
             record.api.id,
             record.api.hash,
