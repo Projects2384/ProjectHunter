@@ -15,7 +15,8 @@ M.schema = new G.db.Schema({
     lesson               : Boolean,
     channels             : [M.channel],
     clients              : [String],
-    messages             : [String]
+    messages             : [String],
+    banned               : [String]
 }, {
     statics: {
         checkAll: async function (client) {

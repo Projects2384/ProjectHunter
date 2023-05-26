@@ -20,10 +20,15 @@ M.sendMessage = async function (message, group) {
     const clients = G.clients.filter(x => group.clients.includes(x.data.phone))
     //
     const target = M.extractTarget(message.message, group.patterns.target)
-    let   lesson = ''
-    if (group.lesson &&
-        !(lesson = await M.extractLesson(message.message)))
+    if (group.banned.includes(target))
         return M.errors.InvalidMessage
+
+    let lesson = ''
+    if (group.lesson) {
+        lesson = await M.extractLesson(message.message)
+        if (!lesson)
+            return M.errors.InvalidMessage
+    }
 
     const time      = utilTime.current()
     const timestamp = time.getTime()
@@ -48,10 +53,11 @@ M.sendMessage = async function (message, group) {
             }
         } catch (error) {
             console.log(error.errorMessage)
+
             if (error.errorMessage === 'PEER_FLOOD') {
+                client.data.until = timestamp + (2 * 86400) * 1000
                 //
-                client.data.until = timestamp
-                        + (2 * 86400) * 1000
+                await client.data.save()
             }
         }
     }

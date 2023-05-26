@@ -9,7 +9,7 @@ M.createAll = async function () {
 
     return records.map(record => {
         const client = new G.telegram.TelegramClient(
-            new G.ext.telegram.sessions.StringSession(record.session),
+            new G.ext.telegram.sessions.StringSession(''),
             //
             record.api.id,
             record.api.hash,
@@ -22,25 +22,35 @@ M.createAll = async function () {
     })
 }
 
-M.checkAll = async function () {
-    for (const client of G.clients) {
-        const params = {}
-        params.phoneNumber = () => client.data.phone
-        params.phoneCode   = () => G.ext.input.text(`${client.data.phone} code:`)
-        if (client.data.password)
-        params.password    = () => client.data.password
-        //
-        params.onError = (err) => console.log(err)
+M.loginAll = async function (clients) {
+    for (const client of clients) {
+        const params = {
+            phoneNumber: () => client.data.phone,
+            phoneCode  : () => G.ext.input.text(`${client.data.phone} code:`),
+            password   : () => client.data.password,
+            //
+            onError: (error) => {
+                if (error.errorMessage.startsWith('PHONE_CODE'))
+                    console.log('Problem with given code, Try again...')
+                else
+                    return true
+            }
+        }
 
-        await client.start(params)
+        if (!client.data.password)
+            delete params.password
+
+        console.log(`${client.data.phone} logging in...`)
+        try {
+            await client.start(params)
+        } catch (error) {
+            console.log('Invalid client')
+        }
 
         client.data.session = client.session.save()
+        //
         await client.data.save()
     }
-}
-
-M.getName = function (user) {
-    return user.firstName + (user.lastName && ` ${user.lastName}` || '')
 }
 
 M.on = function (event, client, callback) {

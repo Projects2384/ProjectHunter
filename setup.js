@@ -11,18 +11,20 @@ const utilTime = require("./core/utils/time");
 
 
 async function main() {
-    console.log(C.env,C.db)
     await G.db.connect(C.db.url)
+    // await G.db.connect("mongodb://127.0.0.1/ProjectHunter")
     console.log('DB Connected');
 
     await G.init()
 
-
-    // await Client.checkAll()
-    for (const client of G.clients) {
-        await client.connect()
-        await client.getMe()
-    }
+    const login = C.argv.login
+    if (login)
+        await Client.loginAll(G.clients)
+    else
+        for (const client of G.clients) {
+            await client.connect()
+            await client.getMe()
+        }
 
     await Models.Group .checkAll(G.master)
     await Models.Client.checkAll(G.clients)

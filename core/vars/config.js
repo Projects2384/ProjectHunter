@@ -1,7 +1,8 @@
 const M = exports
 
 
-M.env = process.env
+M.env  = process.env
+M.argv = require('minimist')(process.argv.slice(2));
 
 M.mananger = {
     username: 'ssh_full'
