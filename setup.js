@@ -17,7 +17,8 @@ async function main() {
     const login = C.argv.login
     if (login) {
         await Client.loginAll(G.clients)
-        return
+
+        return process.exit()
     } else
         for (const client of G.clients) {
             await client.connect()
