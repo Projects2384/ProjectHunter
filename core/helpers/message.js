@@ -29,7 +29,7 @@ M.sendMessage = async function (message, group) {
         if (!lesson)
             return M.errors.InvalidMessage
     }
-    console.log(target, lesson)
+
     const time      = utilTime.current()
     const timestamp = time.getTime()
     for (const client of clients) {
@@ -45,12 +45,25 @@ M.sendMessage = async function (message, group) {
                 await utilTime.delay(5000)
             }
 
-            return {
+            // return {
+            //     lesson: lesson,
+            //     target: target,
+            //     client: client,
+            //     time  : time
+            // }
+            return new Models.History({
+                user: {
+                    username: target
+                },
+                bot: {
+                    phone: client.data.phone
+                },
+                time: {
+                    date     : utilTime.toString(time),
+                    timestamp: time.getTime()
+                },
                 lesson: lesson,
-                target: target,
-                client: client,
-                time  : time
-            }
+            })
         } catch (error) {
             console.log(error.errorMessage)
 
