@@ -29,7 +29,7 @@ M.sendMessage = async function (message, group) {
         if (!lesson)
             return M.errors.InvalidMessage
     }
-
+    console.log(target, lesson)
     const time      = utilTime.current()
     const timestamp = time.getTime()
     for (const client of clients) {
