@@ -5,11 +5,12 @@ const Client  = require('./core/helpers/client')
 const Message = require('./core/helpers/message')
 
 const Models = require("./core/models/all");
+const {Model} = require("mongoose");
 
 
 async function main() {
-    await G.db.connect(C.db.url)
-    // await G.db.connect("mongodb://127.0.0.1/ProjectHunter")
+    // await G.db.connect(C.db.url)
+    await G.db.connect("mongodb://127.0.0.1/ProjectHunter")
     console.log('DB Connected');
 
     await G.init()
@@ -38,11 +39,9 @@ async function main() {
 
         Client.on(event, G.master,
             async (event) => {
-                group = await Models.Group.findById(group._id)
-
                 const message = event.message
+                const result  = await Message.sendMessage(message, group)
 
-                const result = await Message.sendMessage(message, group)
                 if (result === Message.errors.ClientsBanned) {
                     await G.master.sendMessage(C.mananger.username, {
                         message: 'تمام شماره های زیر مشکل دارند‌:\n' + group.clients.join('\n')
@@ -50,7 +49,7 @@ async function main() {
 
                     return
                 }
-                else if (result === Message.errors.InvalidMessage)
+                else if (result.save == null)
                     return
 
                 await result.save()

@@ -9,7 +9,8 @@ const utilString = require('../utils/string')
 
 M.errors = {
     InvalidMessage: 1,
-    ClientsBanned : 2
+    ClientsBanned : 2,
+    DuplicateUser : 3
 }
 
 
@@ -22,6 +23,10 @@ M.sendMessage = async function (message, group) {
     const target = M.extractTarget(message.message, group.patterns.target)
     if (group.banned.includes(target))
         return M.errors.InvalidMessage
+
+    const history = await Models.History.findOne({ user: { username: target }})
+    if (history)
+        return M.errors.DuplicateUser
 
     let lesson = ''
     if (group.lesson) {
@@ -45,12 +50,6 @@ M.sendMessage = async function (message, group) {
                 await utilTime.delay(5000)
             }
 
-            // return {
-            //     lesson: lesson,
-            //     target: target,
-            //     client: client,
-            //     time  : time
-            // }
             return new Models.History({
                 user: {
                     username: target
