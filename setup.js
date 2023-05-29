@@ -9,8 +9,8 @@ const {Model} = require("mongoose");
 
 
 async function main() {
-    // await G.db.connect(C.db.url)
-    await G.db.connect("mongodb://127.0.0.1/ProjectHunter")
+    await G.db.connect(C.db.url)
+    // await G.db.connect("mongodb://127.0.0.1/ProjectHunter")
     console.log('DB Connected');
 
     await G.init()
