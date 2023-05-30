@@ -21,14 +21,10 @@ M.schema = new G.db.Schema({
         checkAll: async function (clients) {
             for (const client of clients) {
                 const entity = await client.getMe()
-                const record = await M.model.findOne({ phone: client.data.phone, id: 0 })
 
-                if (!record)
-                    continue
-
-                record.id = entity.id
+                client.data.id = entity.id
                 //
-                await record.save()
+                await client.data.save()
             }
         }
     }

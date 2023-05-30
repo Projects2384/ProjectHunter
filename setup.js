@@ -31,7 +31,7 @@ async function main() {
 
     const groups = await Models.Group.find()
     for (let group of groups) {
-        const channels = group.channels.map(x => x.id)
+        const channels = group.channels.map(x => x.id).filter(x => x > 0)
 
         const event = new G.ext.telegram.events.NewMessage({
             chats: channels
@@ -62,8 +62,17 @@ async function main() {
         )
 
         console.log('Group registered:')
-        console.log(` + Channels: ${group.channels.map(x => x.name)}`)
-        console.log(` + Clients : ${group.clients}`)
+        console.log(' + Channels:')
+        group.channels
+                .map(x => {
+                    if (x.id > 0)
+                        console.log(`   - ${x.name}`)
+                })
+        console.log(` + Clients:`)
+        group.clients
+                .map(x => {
+                    console.log(`   - ${x}`)
+                })
     }
 }
 

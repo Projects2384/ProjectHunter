@@ -24,15 +24,15 @@ M.schema = new G.db.Schema({
 
             for (const record of records) {
                 for (const channel of record.channels) {
-                    if (channel.id)
-                        continue
+                    try {
+                        const entity = await client.getEntity(channel.name)
 
-                    const entity = await client.getEntity(channel.name)
-
-                    channel.id = entity.id
+                        channel.id = entity.id
+                        //
+                        await record.save()
+                    } catch (error) {
+                    }
                 }
-
-                await record.save()
             }
         }
     }
