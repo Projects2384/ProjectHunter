@@ -21,7 +21,7 @@ M.sendMessage = async function (message, group) {
     const clients = G.clients.filter(x => group.clients.includes(x.data.phone))
     //
     const target = M.extractTarget(message.message, group.patterns.target)
-    if (group.banned.includes(target))
+    if (!target || group.banned.includes(target))
         return M.errors.InvalidMessage
 
     const history = await Models.History.findOne({ user: { username: target }})

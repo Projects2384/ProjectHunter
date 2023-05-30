@@ -55,9 +55,9 @@ async function main() {
                 await result.save()
 
                 console.log('Message sent:')
-                console.log(` + To    : ${result.target}`)
+                console.log(` + To    : ${result.user.username}`)
                 console.log(` + Lesson: ${result.lesson}`)
-                console.log(` + Client: ${result.client.data.phone}`)
+                console.log(` + Client: ${result.bot.phone}`)
             }
         )
 
