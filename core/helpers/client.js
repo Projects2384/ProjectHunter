@@ -56,3 +56,11 @@ M.loginAll = async function (clients) {
 M.on = function (event, client, callback) {
     client.addEventHandler(callback, event)
 }
+
+M.joinChannels = async function (client, channels) {
+    for (const channel of channels)
+        await client.invoke(new G.ext.telegram.api.channels
+                .JoinChannel({
+                    channel: channel
+                }))
+}

@@ -5,7 +5,6 @@ const Client  = require('./core/helpers/client')
 const Message = require('./core/helpers/message')
 
 const Models = require("./core/models/all");
-const {Model} = require("mongoose");
 
 
 async function main() {
@@ -25,13 +24,15 @@ async function main() {
             await client.connect()
             await client.getMe()
         }
-
     await Models.Group .checkAll(G.master)
     await Models.Client.checkAll(G.clients)
+    console.log(`Master: ${G.master.data.phone}`)
 
     const groups = await Models.Group.find()
     for (let group of groups) {
         const channels = group.channels.map(x => x.id).filter(x => x > 0)
+
+        await Client.joinChannels(G.master, channels)
 
         const event = new G.ext.telegram.events.NewMessage({
             chats: channels
@@ -47,10 +48,13 @@ async function main() {
                         message: 'تمام شماره های زیر مشکل دارند‌:\n' + group.clients.join('\n')
                     })
 
+                    console.log('Error: banned')
                     return
                 }
-                else if (result.save == null)
+                else if (result.save == null) {
+                    console.log(`Error: code ${result}`)
                     return
+                }
 
                 await result.save()
 
