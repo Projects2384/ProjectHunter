@@ -10,7 +10,8 @@ const utilString = require('../utils/string')
 M.errors = {
     InvalidMessage: 1,
     ClientsBanned : 2,
-    DuplicateUser : 3
+    DuplicateUser : 3,
+    Unknown       : 4
 }
 
 
@@ -35,11 +36,21 @@ M.sendMessage = async function (message, group) {
             return M.errors.InvalidMessage
     }
 
+    let available = false
+
     const time      = utilTime.current()
     const timestamp = time.getTime()
     for (const client of clients) {
-        if (timestamp <= client.data.until)
+        // update record
+        await client.data.save()
+        //
+        if (client.data.until > timestamp)
             continue
+        if (client.data.until !== 0) {
+            client.data.until = 0
+            //
+            await client.data.save()
+        }
 
         try {
             for (const text of group.messages) {
@@ -64,17 +75,22 @@ M.sendMessage = async function (message, group) {
                 lesson: lesson,
             })
         } catch (error) {
-            console.log(error.errorMessage)
+            console.log('Error [Client]: ', error.errorMessage || error)
 
             if (error.errorMessage === 'PEER_FLOOD') {
                 client.data.until = timestamp + (2 * 86400) * 1000
                 //
                 await client.data.save()
             }
+            else
+                available = true
         }
     }
 
-    return M.errors.ClientsBanned;
+    if (!available)
+        return M.errors.ClientsBanned
+    //
+    return M.errors.Unknown
 }
 
 M.checkRegex = function (pattern, text) {

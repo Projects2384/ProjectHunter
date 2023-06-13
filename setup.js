@@ -26,9 +26,11 @@ async function main() {
         }
     await Models.Group .checkAll(G.master)
     await Models.Client.checkAll(G.clients)
+
     console.log(`Master: ${G.master.data.phone}`)
 
     const groups = await Models.Group.find()
+    //
     for (let group of groups) {
         const channels = group.channels.map(x => x.id).filter(x => x > 0)
 
