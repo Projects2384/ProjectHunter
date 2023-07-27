@@ -21,11 +21,14 @@ M.schema = new G.db.Schema({
     statics: {
         checkAll: async function (clients) {
             for (const client of clients) {
-                const entity = await client.getMe()
+                try {
+                    const entity = await client.getMe()
 
-                client.data.id = entity.id
-                //
-                await client.data.save()
+                    client.data.id = entity.id
+                    //
+                    await client.data.save()
+                } catch (error) {
+                }
             }
         }
     }

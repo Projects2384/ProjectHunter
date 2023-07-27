@@ -29,10 +29,12 @@ async function main() {
 
                 client.data.active = true
             } catch (error) {
-                if (error.errorMessage === 'USER_DEACTIVATED_BAN') {
+                if (error.errorMessage.startsWith('USER_DEACTIVATED')) {
                     client.data.active = false
                     //
                     remove.push(index)
+                    // destroy client
+                    await client.destroy()
                 }
             }
             await client.data.save()
