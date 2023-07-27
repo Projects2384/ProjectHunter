@@ -24,6 +24,7 @@ async function main() {
             await client.connect()
             await client.getMe()
         }
+
     await Models.Group .checkAll(G.master)
     await Models.Client.checkAll(G.clients)
 

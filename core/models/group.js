@@ -31,6 +31,7 @@ M.schema = new G.db.Schema({
                         //
                         await record.save()
                     } catch (error) {
+                        console.log(error)
                     }
                 }
             }
