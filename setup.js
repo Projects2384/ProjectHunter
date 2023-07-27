@@ -27,7 +27,7 @@ async function main() {
                 await client.connect()
                 await client.getMe()
 
-                client.data.active = false
+                client.data.active = true
             } catch (error) {
                 if (error.errorMessage === 'USER_DEACTIVATED_BAN') {
                     client.data.active = false
