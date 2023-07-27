@@ -19,11 +19,28 @@ async function main() {
         await Client.loginAll(G.clients)
 
         return process.exit()
-    } else
-        for (const client of G.clients) {
-            await client.connect()
-            await client.getMe()
+    } else {
+        const remove = []
+
+        for (const [index, client] of G.clients.entries()) {
+            try {
+                await client.connect()
+                await client.getMe()
+
+                client.data.active = false
+            } catch (error) {
+                if (error.errorMessage === 'USER_DEACTIVATED_BAN') {
+                    client.data.active = false
+                    //
+                    remove.push(index)
+                }
+            }
+            await client.data.save()
         }
+
+        for (const index of remove.reverse())
+            G.clients.splice(index, 1);
+      }
 
     await Models.Group .checkAll(G.master)
     await Models.Client.checkAll(G.clients)

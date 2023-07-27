@@ -7,6 +7,7 @@ M.schema = new G.db.Schema({
         type             : Number,
         default          : 0
     },
+    active               : Boolean,
     phone                : String,
     username             : String,
     password             : String,
