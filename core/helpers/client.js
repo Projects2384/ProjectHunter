@@ -14,7 +14,7 @@ M.createAll = async function () {
             record.api.id,
             record.api.hash,
             //
-            {}
+            {proxy:{ip:'127.0.0.1',port:2080,socksType:5}}
         )
         client.data = record
 
