@@ -6,6 +6,8 @@ M.channel = new G.db.Schema({
     name                 : String,
     id                   : Number,
     lastChecked          : Number,
+}, {
+    _id: false
 })
 
 M.schema = new G.db.Schema({

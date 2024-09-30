@@ -5,6 +5,8 @@ const G = require('../vars/global')
 M.channel = new G.db.Schema({
     name                 : String,
     id                   : Number,
+}, {
+    _id: false
 })
 
 M.schema = new G.db.Schema({
