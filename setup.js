@@ -102,7 +102,7 @@ async function main() {
             }
           }
 
-          await new Promise(r => setTimeout(r, 30 * 10000));
+          await new Promise(r => setTimeout(r, 20 * 1000));
         }
 
         await group.save()
