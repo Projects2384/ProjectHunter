@@ -19,7 +19,7 @@ M.sendMessage = async function (message, group) {
     if (!M.checkMessage(message.message, group.patterns.message))
         return M.errors.InvalidMessage
 
-    const clients = G.clients.filter(x => group.clients.includes(x.data.phone))
+    const clients = G.slaves.filter(x => group.clients.includes(x.data.phone))
     //
     const target = M.extractTarget(message.message, group.patterns.target)
     if (!target || group.banned.includes(target))
